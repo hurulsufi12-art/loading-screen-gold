@@ -34,6 +34,11 @@ def check_gate(text):
         raise SystemExit("entry text violates the 1-200 byte gate")
     if not text.strip():
         raise SystemExit("entry text is whitespace-only")
+    # No control characters: a newline or control byte inside the text
+    # would break the single-line tip the grader reads, so fail loudly
+    # instead of writing it.
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in text):
+        raise SystemExit("entry text must not contain control characters")
 
 
 def main():
